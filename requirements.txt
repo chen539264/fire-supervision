@@ -1,4 +1,4 @@
+streamlit
 ultralytics
-gradio
-numpy
 opencv-python-headless
+Pillow
