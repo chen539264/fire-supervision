@@ -17,16 +17,22 @@ st.set_page_config(
 
 
 # =========================================================
-# 简约 CSS
+# 页面样式
 # 中文：宋体
-# 西文、数字：Times New Roman
+# 西文 / 数字：Times New Roman
 # =========================================================
 st.markdown(
     """
     <style>
 
-    /* 整体页面 */
-    html, body, [class*="css"] {
+    /* =====================================================
+       整体页面
+    ===================================================== */
+
+    html,
+    body,
+    [class*="css"],
+    .stApp {
         font-family:
             "Times New Roman",
             "SimSun",
@@ -35,17 +41,27 @@ st.markdown(
     }
 
     [data-testid="stAppViewContainer"] {
-        background: white;
+        background: #ffffff;
         color: #111111;
     }
 
+    /*
+       尽量利用整个屏幕
+       左右只留很小的边距
+    */
     .block-container {
-        max-width: 1450px;
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
+        max-width: 97%;
+        padding-top: 0.8rem;
+        padding-bottom: 1.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
     }
 
-    /* 隐藏 Streamlit 默认元素 */
+
+    /* =====================================================
+       隐藏 Streamlit 默认元素
+    ===================================================== */
+
     #MainMenu {
         visibility: hidden;
     }
@@ -54,120 +70,235 @@ st.markdown(
         visibility: hidden;
     }
 
-    /* 标题 */
+
+    /* =====================================================
+       标题
+    ===================================================== */
+
     .main-title {
         text-align: center;
+
         font-family:
             "Times New Roman",
             "SimSun",
             serif;
-        font-size: 34px;
+
+        font-size: 31px;
         font-weight: bold;
+
         color: #111111;
-        margin-bottom: 4px;
+
+        margin-top: 0;
+        margin-bottom: 3px;
     }
+
 
     .sub-title {
         text-align: center;
+
         font-family:
             "SimSun",
             "Songti SC",
             serif;
-        font-size: 17px;
+
+        font-size: 16px;
+
         color: #444444;
-        margin-bottom: 18px;
+
+        margin-bottom: 12px;
     }
 
-    /* 横线 */
-    .line {
+
+    /* =====================================================
+       横线
+    ===================================================== */
+
+    .main-line {
         border: none;
-        border-top: 1px solid #888888;
-        margin: 12px 0 22px 0;
+        border-top: 1px solid #777777;
+        margin: 8px 0 16px 0;
     }
 
     .thin-line {
         border: none;
-        border-top: 1px solid #d0d0d0;
-        margin: 18px 0;
+        border-top: 1px solid #d3d3d3;
+        margin: 13px 0;
     }
 
-    /* 小标题 */
-    h1, h2, h3, h4 {
+
+    /* =====================================================
+       各级标题
+    ===================================================== */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         font-family:
             "Times New Roman",
             "SimSun",
+            "Songti SC",
             serif !important;
+
         color: #111111;
+
+        letter-spacing: 0;
     }
 
-    /* 上传组件 */
+
+    /* =====================================================
+       上传区域
+    ===================================================== */
+
     [data-testid="stFileUploaderDropzone"] {
-        background: white;
-        border: 1px solid #bdbdbd;
-        border-radius: 2px;
+        background: #ffffff;
+
+        border: 1px solid #b7b7b7;
+
+        border-radius: 0;
+
+        padding: 10px;
     }
 
-    /* 下拉菜单 */
+
+    /* =====================================================
+       下拉菜单
+    ===================================================== */
+
     [data-baseweb="select"] > div {
-        border-radius: 2px !important;
+        border-radius: 0 !important;
         border-color: #999999 !important;
+        min-height: 43px;
     }
 
-    /* 按钮 */
+
+    /* =====================================================
+       开始检测按钮
+    ===================================================== */
+
     div[data-testid="stFormSubmitButton"] button {
+
         width: 100%;
-        min-height: 46px;
-        border-radius: 2px;
-        border: 1px solid #333333;
+
+        min-height: 45px;
+
+        border-radius: 0;
+
+        border: 1px solid #222222;
+
         background: #222222;
-        color: white;
+
+        color: #ffffff;
+
         font-family:
             "Times New Roman",
             "SimSun",
             serif;
+
         font-size: 16px;
+
+        font-weight: normal;
     }
 
+
     div[data-testid="stFormSubmitButton"] button:hover {
+
         background: #444444;
-        color: white;
+
+        color: #ffffff;
+
         border-color: #222222;
     }
 
-    /* 图片 */
+
+    /* =====================================================
+       图片
+    ===================================================== */
+
     [data-testid="stImage"] img {
-        border-radius: 0px;
+
+        border-radius: 0;
+
         border: 1px solid #dddddd;
     }
 
-    /* Metric 去掉卡片感 */
+
+    /* =====================================================
+       指标
+    ===================================================== */
+
     [data-testid="stMetric"] {
-        background: white;
+
+        background: #ffffff;
+
         border: none;
-        padding: 4px 0;
+
+        padding: 2px 0;
     }
 
+
     [data-testid="stMetricLabel"] {
+
         font-family:
             "SimSun",
             "Songti SC",
             serif;
-        font-size: 15px;
+
+        font-size: 14px;
     }
 
+
     [data-testid="stMetricValue"] {
+
+        font-family:
+            "Times New Roman",
+            "SimSun",
+            serif;
+
+        font-size: 26px;
+    }
+
+
+    /* =====================================================
+       下载按钮
+    ===================================================== */
+
+    .stDownloadButton > button {
+
+        width: 100%;
+
+        border-radius: 0;
+
+        border: 1px solid #555555;
+
+        background: #ffffff;
+
+        color: #111111;
+
+        min-height: 43px;
+
         font-family:
             "Times New Roman",
             "SimSun",
             serif;
     }
 
-    /* 下载按钮 */
-    .stDownloadButton > button {
-        border-radius: 2px;
-        border: 1px solid #555555;
-        background: white;
-        color: #111111;
+
+    /* =====================================================
+       caption
+    ===================================================== */
+
+    [data-testid="stCaptionContainer"] {
+
+        font-family:
+            "Times New Roman",
+            "SimSun",
+            "Songti SC",
+            serif;
+
+        color: #666666;
     }
 
     </style>
@@ -177,7 +308,7 @@ st.markdown(
 
 
 # =========================================================
-# 顶部标题区
+# 顶部标题区域
 # =========================================================
 st.markdown(
     '<div class="main-title">Fire Supervision</div>',
@@ -190,13 +321,13 @@ st.markdown(
 )
 
 st.markdown(
-    '<hr class="line">',
+    '<hr class="main-line">',
     unsafe_allow_html=True
 )
 
 
 # =========================================================
-# 加载模型
+# 加载 YOLO 模型
 # =========================================================
 @st.cache_resource
 def load_model():
@@ -207,21 +338,21 @@ model = load_model()
 
 
 # =========================================================
-# 保存检测结果
+# Session State
 # =========================================================
 if "result_data" not in st.session_state:
     st.session_state.result_data = None
 
 
 # =========================================================
-# 主布局
+# 主体布局
 #
-# 左：设置
-# 右：检测结果
+# 左侧尽量窄
+# 右侧尽量宽
 # =========================================================
 left_col, right_col = st.columns(
-    [1, 3.2],
-    gap="large"
+    [0.65, 4.35],
+    gap="small"
 )
 
 
@@ -237,16 +368,21 @@ with left_col:
         unsafe_allow_html=True
     )
 
+
     with st.form("detection_form"):
 
         # -------------------------------------------------
-        # 上传图片
+        # 1. 上传图片
         # -------------------------------------------------
         st.markdown("#### 1. 上传图片")
 
         uploaded_file = st.file_uploader(
             "请选择待检测图像",
-            type=["jpg", "jpeg", "png"]
+            type=[
+                "jpg",
+                "jpeg",
+                "png"
+            ]
         )
 
 
@@ -254,7 +390,7 @@ with left_col:
 
 
         # -------------------------------------------------
-        # 检测强度
+        # 2. 检测强度
         # -------------------------------------------------
         st.markdown("#### 2. 检测强度")
 
@@ -271,15 +407,25 @@ with left_col:
 
 
         # =================================================
-        # 内部置信度
+        # 内部置信度阈值
         #
-        # 页面中不显示
+        # 页面不显示具体数字
+        #
+        # 高强度：
+        # 阈值最低，因此通常检测目标更多
         # =================================================
         confidence_map = {
-            "高强度": 0.10,
-            "标准": 0.20,
-            "稳健": 0.30
+
+            "高强度":
+                0.10,
+
+            "标准":
+                0.20,
+
+            "稳健":
+                0.30
         }
+
 
         confidence = confidence_map[
             detection_level
@@ -287,24 +433,26 @@ with left_col:
 
 
         # -------------------------------------------------
-        # 模式说明
+        # 模式简短说明
         # -------------------------------------------------
         if detection_level == "高强度":
 
             st.caption(
-                "检测灵敏度较高，可保留更多疑似火焰目标。"
+                "灵敏度最高，可保留更多疑似火焰目标。"
             )
+
 
         elif detection_level == "标准":
 
             st.caption(
-                "兼顾检测灵敏度与结果稳定性。"
+                "兼顾检测数量与结果稳定性。"
             )
+
 
         else:
 
             st.caption(
-                "过滤较弱候选目标，检测结果更加保守。"
+                "过滤较弱目标，检测结果更加保守。"
             )
 
 
@@ -321,25 +469,29 @@ with left_col:
 
 
     # =====================================================
-    # 左侧说明
+    # 左下方模式说明
     # =====================================================
     st.markdown(
         '<hr class="thin-line">',
         unsafe_allow_html=True
     )
 
+
     st.markdown("#### 模式说明")
+
 
     st.caption(
         "高强度：优先发现更多潜在目标。"
     )
 
-    st.caption(
-        "标准：兼顾目标数量与检测稳定性。"
-    )
 
     st.caption(
-        "稳健：主要保留较明显的火焰目标。"
+        "标准：兼顾检测灵敏度和稳定性。"
+    )
+
+
+    st.caption(
+        "稳健：主要保留更加明显的目标。"
     )
 
 
@@ -348,12 +500,20 @@ with left_col:
 # =========================================================
 if detect_button:
 
+
+    # -----------------------------------------------------
+    # 未上传图片
+    # -----------------------------------------------------
     if uploaded_file is None:
 
         st.warning(
             "请先上传待检测图片。"
         )
 
+
+    # -----------------------------------------------------
+    # 已上传
+    # -----------------------------------------------------
     else:
 
         image = Image.open(
@@ -364,6 +524,9 @@ if detect_button:
         start_time = time.time()
 
 
+        # -------------------------------------------------
+        # YOLO 推理
+        # -------------------------------------------------
         with st.spinner(
             "正在进行目标检测..."
         ):
@@ -384,9 +547,10 @@ if detect_button:
 
 
         # =================================================
-        # YOLO 检测图像
-        # =================================================
+        # 绘制检测结果
+        # =========================================================
         annotated_bgr = result.plot()
+
 
         annotated_rgb = cv2.cvtColor(
             annotated_bgr,
@@ -395,16 +559,19 @@ if detect_button:
 
 
         # =================================================
-        # 检测框
-        # =================================================
+        # 获取检测框
+        # =========================================================
         boxes = result.boxes
 
-        object_count = len(boxes)
+
+        object_count = len(
+            boxes
+        )
 
 
         # =================================================
-        # 置信度
-        # =================================================
+        # 置信度统计
+        # =========================================================
         if object_count > 0:
 
             conf_values = (
@@ -414,23 +581,31 @@ if detect_button:
                 .numpy()
             )
 
+
             max_conf = float(
-                np.max(conf_values)
+                np.max(
+                    conf_values
+                )
             )
 
+
             avg_conf = float(
-                np.mean(conf_values)
+                np.mean(
+                    conf_values
+                )
             )
+
 
         else:
 
             max_conf = 0.0
+
             avg_conf = 0.0
 
 
         # =================================================
-        # 保存结果
-        # =================================================
+        # 保存本次结果
+        # =========================================================
         st.session_state.result_data = {
 
             "image":
@@ -460,7 +635,7 @@ if detect_button:
 
 
 # =========================================================
-# 右侧：检测区域
+# 右侧区域
 # =========================================================
 with right_col:
 
@@ -473,79 +648,93 @@ with right_col:
 
 
     # =====================================================
-    # 右侧始终分为两栏
+    # 原图 / 检测图
+    #
+    # 使用 small gap，
+    # 尽可能让两张图片大
     # =====================================================
     original_col, detection_col = st.columns(
-        2,
-        gap="large"
+        [1, 1],
+        gap="small"
     )
 
 
     # =====================================================
-    # 尚未检测
+    # 尚未进行检测
     # =====================================================
     if st.session_state.result_data is None:
 
+
         # -------------------------------------------------
-        # 原始图片
+        # 原始图像等待区
         # -------------------------------------------------
         with original_col:
 
             st.markdown("#### 原始图像")
 
-            st.markdown("")
 
             st.markdown(
-                "<div style='height:320px;"
-                "border:1px solid #d5d5d5;"
+                "<div style='"
+                "height:390px;"
+                "border:1px solid #d0d0d0;"
                 "display:flex;"
                 "align-items:center;"
                 "justify-content:center;"
-                "color:#999999;"
-                "font-family:SimSun,serif;'>"
+                "color:#888888;"
+                "font-family:SimSun,Songti SC,serif;"
+                "font-size:15px;"
+                "'>"
                 "等待上传图像"
                 "</div>",
                 unsafe_allow_html=True
             )
 
+
             st.markdown("")
 
+
             st.caption(
-                "原始图像：显示用户上传、尚未经过目标检测处理的图像。"
+                "原始图像：显示用户上传的原始输入图像，"
+                "未经目标检测算法处理。"
             )
 
 
         # -------------------------------------------------
-        # 检测图片
+        # 检测图像等待区
         # -------------------------------------------------
         with detection_col:
 
             st.markdown("#### 检测图像")
 
-            st.markdown("")
 
             st.markdown(
-                "<div style='height:320px;"
-                "border:1px solid #d5d5d5;"
+                "<div style='"
+                "height:390px;"
+                "border:1px solid #d0d0d0;"
                 "display:flex;"
                 "align-items:center;"
                 "justify-content:center;"
-                "color:#999999;"
-                "font-family:SimSun,serif;'>"
+                "color:#888888;"
+                "font-family:SimSun,Songti SC,serif;"
+                "font-size:15px;"
+                "'>"
                 "等待检测结果"
                 "</div>",
                 unsafe_allow_html=True
             )
 
+
             st.markdown("")
 
+
             st.caption(
-                "检测图像：显示模型识别出的疑似火焰位置及相应检测框。"
+                "检测图像：显示 YOLOv8 识别得到的"
+                "疑似火焰位置及对应检测框。"
             )
 
 
     # =====================================================
-    # 已检测
+    # 已完成检测
     # =====================================================
     else:
 
@@ -559,32 +748,36 @@ with right_col:
 
             st.markdown("#### 原始图像")
 
+
             st.image(
                 data["image"],
                 use_container_width=True
             )
 
+
             st.caption(
                 "原始图像：用户上传的原始输入图像，"
-                "用于与模型检测结果进行对照。"
+                "作为模型检测结果的对照。"
             )
 
 
         # -------------------------------------------------
-        # 检测图像
+        # 检测结果
         # -------------------------------------------------
         with detection_col:
 
             st.markdown("#### 检测图像")
+
 
             st.image(
                 data["annotated_rgb"],
                 use_container_width=True
             )
 
+
             st.caption(
-                "检测图像：检测框表示模型识别出的疑似火焰区域，"
-                "框上数值表示对应目标的置信度。"
+                "检测图像：检测框表示模型识别出的疑似火焰区域；"
+                "框上的数值表示对应目标的置信度。"
             )
 
 
@@ -602,19 +795,27 @@ with right_col:
         # =================================================
         st.markdown("#### 检测数据")
 
+
         metric1, metric2, metric3, metric4 = st.columns(
-            4
+            [1, 1, 1, 1]
         )
 
 
+        # -------------------------------------------------
+        # 目标数量
+        # -------------------------------------------------
         metric1.metric(
             "检测目标数量",
             f'{data["object_count"]}'
         )
 
 
+        # -------------------------------------------------
+        # 最高置信度
+        # -------------------------------------------------
         metric2.metric(
             "最高置信度",
+
             (
                 f'{data["max_conf"] * 100:.1f}%'
                 if data["object_count"] > 0
@@ -623,8 +824,12 @@ with right_col:
         )
 
 
+        # -------------------------------------------------
+        # 平均置信度
+        # -------------------------------------------------
         metric3.metric(
             "平均置信度",
+
             (
                 f'{data["avg_conf"] * 100:.1f}%'
                 if data["object_count"] > 0
@@ -633,6 +838,9 @@ with right_col:
         )
 
 
+        # -------------------------------------------------
+        # 检测模式
+        # -------------------------------------------------
         metric4.metric(
             "检测模式",
             data["detection_level"]
@@ -649,7 +857,7 @@ with right_col:
 
 
         # =================================================
-        # 结果说明
+        # 检测结果说明
         # =================================================
         st.markdown("#### 结果说明")
 
@@ -657,30 +865,35 @@ with right_col:
         if data["object_count"] == 0:
 
             st.write(
-                "当前图像中未检测到符合当前检测模式要求的火焰目标。"
+                "当前图像中未检测到符合当前检测模式要求的"
+                "疑似火焰目标。"
             )
+
 
         else:
 
             st.write(
                 f'本次共检测到 '
-                f'{data["object_count"]} 个疑似火焰目标。'
+                f'{data["object_count"]} '
+                f'个疑似火焰目标。'
             )
 
+
             st.write(
-                "检测框用于表示模型定位到的疑似火焰区域；"
-                "置信度反映模型对该目标属于火焰类别的判断程度。"
+                "检测框表示模型定位到的疑似火焰区域；"
+                "置信度用于反映模型对该目标属于火焰类别"
+                "的判断程度。"
             )
 
 
         st.caption(
-            f'本次检测耗时：'
+            f'模型本次检测耗时：'
             f'{data["inference_time"]:.2f} s'
         )
 
 
         # =================================================
-        # 下载
+        # 下载检测结果
         # =================================================
         success, encoded_image = cv2.imencode(
             ".png",
@@ -703,15 +916,18 @@ with right_col:
 # 页面底部
 # =========================================================
 st.markdown(
-    '<hr class="line">',
+    '<hr class="main-line">',
     unsafe_allow_html=True
 )
 
+
 st.markdown(
-    "<div style='text-align:center;"
+    "<div style='"
+    "text-align:center;"
     "font-family:Times New Roman,SimSun,serif;"
     "font-size:12px;"
-    "color:#777777;'>"
+    "color:#777777;"
+    "'>"
     "Fire Supervision · YOLOv8 Fire Detection System"
     "</div>",
     unsafe_allow_html=True
