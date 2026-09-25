@@ -3,10 +3,11 @@ from ultralytics import YOLO
 from PIL import Image
 import cv2
 import numpy as np
+import time
 
 
 # =========================================================
-# 页面设置
+# 页面配置
 # =========================================================
 st.set_page_config(
     page_title="Fire Supervision",
@@ -17,186 +18,149 @@ st.set_page_config(
 
 
 # =========================================================
-# 页面美化 CSS
+# CSS
 # =========================================================
-st.markdown(
-    """
-    <style>
+st.markdown("""
+<style>
 
-    /* 页面背景 */
-    [data-testid="stAppViewContainer"] {
-        background:
-            radial-gradient(circle at 10% 0%, rgba(255, 91, 59, 0.08), transparent 28%),
-            #f5f7fa;
-    }
+/* 主页面 */
+[data-testid="stAppViewContainer"] {
+    background: #f4f6f9;
+}
 
-    /* 主体宽度 */
-    .block-container {
-        max-width: 1250px;
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-    }
+.block-container {
+    max-width: 1500px;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+}
 
-    /* 隐藏 Streamlit 默认元素 */
-    #MainMenu {
-        visibility: hidden;
-    }
+/* 隐藏 Streamlit 默认元素 */
+#MainMenu {
+    visibility: hidden;
+}
 
-    footer {
-        visibility: hidden;
-    }
+footer {
+    visibility: hidden;
+}
 
-    /* 上传框 */
-    [data-testid="stFileUploaderDropzone"] {
-        background: #fafbfc;
-        border: 1.5px dashed #cbd5e1;
-        border-radius: 16px;
-        padding: 18px;
-    }
+/* 卡片圆角 */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 18px;
+    background: white;
+}
 
-    [data-testid="stFileUploaderDropzone"]:hover {
-        border-color: #f05a47;
-        background: #fff8f6;
-    }
+/* 上传框 */
+[data-testid="stFileUploaderDropzone"] {
+    background: #fafbfc;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 14px;
+}
 
-    /* 卡片 */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        border-radius: 18px;
-    }
+/* Metric */
+[data-testid="stMetric"] {
+    background: #ffffff;
+    border: 1px solid #e7eaf0;
+    padding: 16px;
+    border-radius: 14px;
+}
 
-    /* Metrics */
-    [data-testid="stMetric"] {
-        background: white;
-        border: 1px solid #e8edf3;
-        border-radius: 16px;
-        padding: 18px;
-    }
+/* 图片 */
+[data-testid="stImage"] img {
+    border-radius: 14px;
+}
 
-    [data-testid="stMetricLabel"] {
-        font-weight: 600;
-    }
+/* 主按钮 */
+div[data-testid="stFormSubmitButton"] button {
+    width: 100%;
+    min-height: 52px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(
+        90deg,
+        #e84032,
+        #ff6840
+    );
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+}
 
-    /* 普通按钮 */
-    .stButton > button,
-    .stDownloadButton > button {
-        border-radius: 12px;
-        min-height: 48px;
-        font-weight: 700;
-    }
+div[data-testid="stFormSubmitButton"] button:hover {
+    color: white;
+    border: none;
+    opacity: 0.94;
+}
 
-    /* form submit 主按钮 */
-    div[data-testid="stFormSubmitButton"] button {
-        width: 100%;
-        min-height: 54px;
-        border-radius: 14px;
-        border: none;
-        background: linear-gradient(
-            90deg,
-            #e93f33 0%,
-            #ff6b35 100%
-        );
-        color: white;
-        font-size: 17px;
-        font-weight: 700;
-        box-shadow: 0 8px 20px rgba(233, 63, 51, 0.18);
-    }
+/* 下载按钮 */
+.stDownloadButton > button {
+    width: 100%;
+    min-height: 45px;
+    border-radius: 11px;
+    font-weight: 600;
+}
 
-    div[data-testid="stFormSubmitButton"] button:hover {
-        color: white;
-        border: none;
-        transform: translateY(-1px);
-    }
-
-    /* 图片圆角 */
-    [data-testid="stImage"] img {
-        border-radius: 16px;
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+</style>
+""", unsafe_allow_html=True)
 
 
 # =========================================================
-# Hero 顶部区域
+# 顶部标题
+# 注意：HTML 不缩进，避免再次显示成代码
 # =========================================================
-st.markdown(
-    """
-    <div style="
-        background:
-            linear-gradient(
-                120deg,
-                #111827 0%,
-                #1f2937 55%,
-                #3a1f1b 100%
-            );
-        padding: 32px 38px;
-        border-radius: 24px;
-        margin-bottom: 26px;
-        box-shadow: 0 18px 40px rgba(17,24,39,0.10);
-    ">
+st.markdown("""
+<div style="background:linear-gradient(115deg,#111827,#202936 65%,#44211c);
+padding:28px 34px;
+border-radius:22px;
+margin-bottom:22px;
+box-shadow:0 12px 30px rgba(15,23,42,0.08);">
 
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            flex-wrap:wrap;
-            gap:16px;
-        ">
+<div style="display:flex;
+justify-content:space-between;
+align-items:center;
+gap:20px;
+flex-wrap:wrap;">
 
-            <div>
+<div>
 
-                <div style="
-                    color:#ff8a65;
-                    font-size:13px;
-                    font-weight:700;
-                    letter-spacing:2px;
-                    margin-bottom:8px;
-                ">
-                    AI FIRE DETECTION PLATFORM
-                </div>
+<div style="font-size:12px;
+font-weight:700;
+letter-spacing:2px;
+color:#ff8a6c;
+margin-bottom:7px;">
+AI FIRE DETECTION PLATFORM
+</div>
 
-                <div style="
-                    color:white;
-                    font-size:38px;
-                    line-height:1.2;
-                    font-weight:800;
-                ">
-                    🔥 Fire Supervision
-                </div>
+<div style="font-size:36px;
+font-weight:800;
+color:white;
+line-height:1.2;">
+🔥 Fire Supervision
+</div>
 
-                <div style="
-                    color:#cbd5e1;
-                    font-size:16px;
-                    margin-top:10px;
-                ">
-                    基于 YOLOv8 的智能火灾目标检测系统
-                </div>
+<div style="font-size:15px;
+color:#cbd5e1;
+margin-top:9px;">
+基于 YOLOv8 的智能火灾目标检测与分析系统
+</div>
 
-            </div>
+</div>
 
-            <div style="
-                background:rgba(255,255,255,0.08);
-                border:1px solid rgba(255,255,255,0.12);
-                padding:10px 16px;
-                border-radius:999px;
-                color:#f1f5f9;
-                font-size:13px;
-                font-weight:600;
-            ">
-                ● MODEL ONLINE
-            </div>
+<div style="padding:9px 15px;
+border-radius:999px;
+border:1px solid rgba(255,255,255,0.16);
+background:rgba(255,255,255,0.07);
+color:#e2e8f0;
+font-size:12px;">
+● YOLOv8 MODEL ONLINE
+</div>
 
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # =========================================================
-# 加载 YOLO
+# 加载模型
 # =========================================================
 @st.cache_resource
 def load_model():
@@ -207,62 +171,69 @@ model = load_model()
 
 
 # =========================================================
-# 简介
+# 主布局
+#
+# 左侧：设置
+# 右侧：原图 + 检测结果
 # =========================================================
-st.markdown("### 图像检测")
-
-st.caption(
-    "上传待检测图像，选择检测灵敏度，然后点击「开始检测」。"
+setting_col, workspace_col = st.columns(
+    [1, 3.2],
+    gap="large"
 )
 
 
 # =========================================================
-# 表单区域
+# 左侧：检测控制面板
 # =========================================================
-with st.container(border=True):
+with setting_col:
 
-    with st.form("fire_detection_form"):
+    with st.container(border=True):
 
-        col_upload, col_setting = st.columns(
-            [1.7, 1],
-            gap="large"
+        st.markdown("### ⚙️ 检测设置")
+
+        st.caption(
+            "上传图片并设置检测灵敏度。"
         )
 
-        # -------------------------
-        # 上传图片
-        # -------------------------
-        with col_upload:
+        st.divider()
 
-            st.markdown("#### ① 上传图像")
+        with st.form("detection_form"):
+
+            st.markdown("#### ① 上传图片")
 
             uploaded_file = st.file_uploader(
-                "支持 JPG、JPEG、PNG",
-                type=["jpg", "jpeg", "png"],
-                label_visibility="visible"
+                "JPG / JPEG / PNG",
+                type=[
+                    "jpg",
+                    "jpeg",
+                    "png"
+                ]
             )
 
-        # -------------------------
-        # 置信度
-        # -------------------------
-        with col_setting:
+            st.markdown("")
 
-            st.markdown("#### ② 检测灵敏度")
+            st.markdown("#### ② 置信度等级")
 
-            confidence_mode = st.select_slider(
-                "选择置信度阈值",
+            confidence_level = st.select_slider(
+                "检测灵敏度",
                 options=[
-                    "高灵敏度 · 10%",
-                    "标准模式 · 30%"
+                    "10% 高灵敏度",
+                    "30% 标准模式"
                 ],
-                value="标准模式 · 30%"
+                value="30% 标准模式",
+                label_visibility="collapsed"
             )
 
-            if confidence_mode == "高灵敏度 · 10%":
+
+            # 选择实际阈值
+            if confidence_level == "10% 高灵敏度":
 
                 confidence = 0.10
 
                 st.info(
-                    "10%：更容易发现疑似火焰，但误报可能更多。"
+                    "高灵敏度模式\n\n"
+                    "能够发现更多疑似火焰目标，"
+                    "但低置信度误检也可能增加。"
                 )
 
             else:
@@ -270,88 +241,80 @@ with st.container(border=True):
                 confidence = 0.30
 
                 st.info(
-                    "30%：过滤低置信度结果，检测结果更加稳健。"
+                    "标准检测模式\n\n"
+                    "过滤置信度较低的候选目标，"
+                    "结果通常更加稳健。"
                 )
 
-        st.markdown("")
 
-        # -------------------------
-        # 开始按钮
-        # -------------------------
-        detect_button = st.form_submit_button(
-            "🔥 开始检测",
-            use_container_width=True
+            st.markdown("")
+
+            detect_button = st.form_submit_button(
+                "🔥 开始检测",
+                use_container_width=True
+            )
+
+
+        st.divider()
+
+        st.markdown("#### 阈值说明")
+
+        st.caption(
+            "10% 表示模型认为目标属于火焰的概率达到 "
+            "0.10 后即可显示检测框。"
+        )
+
+        st.caption(
+            "30% 表示只有置信度达到 0.30 及以上的目标"
+            "才会保留。"
         )
 
 
 # =========================================================
-# 开始检测
+# 检测状态变量
+# =========================================================
+if "result_data" not in st.session_state:
+    st.session_state.result_data = None
+
+
+# =========================================================
+# 执行检测
 # =========================================================
 if detect_button:
 
     if uploaded_file is None:
 
-        st.warning("请先上传一张需要检测的图片。")
+        st.warning(
+            "请先在左侧上传需要检测的图片。"
+        )
 
     else:
 
-        # 读取图像
         image = Image.open(
             uploaded_file
         ).convert("RGB")
 
-        # -------------------------------------------------
-        # 检测中的交互提示
-        # -------------------------------------------------
-        with st.status(
-            "正在执行 AI 火灾检测...",
-            expanded=True
-        ) as status:
 
-            st.write("正在读取图像...")
-            st.write(
-                f"当前置信度阈值：{int(confidence * 100)}%"
-            )
+        start_time = time.time()
 
-            # YOLO 推理
+
+        with st.spinner(
+            "AI 正在分析图像，请稍候..."
+        ):
+
             results = model.predict(
                 source=image,
                 conf=confidence,
                 verbose=False
             )
 
-            result = results[0]
 
-            st.write("YOLOv8 推理完成")
-            st.write("正在生成检测结果...")
+        inference_time = time.time() - start_time
 
-            status.update(
-                label="检测完成",
-                state="complete",
-                expanded=False
-            )
+        result = results[0]
 
-        # =================================================
-        # 检测结果
-        # =================================================
-        st.markdown("## 检测结果")
 
-        original_col, result_col = st.columns(
-            2,
-            gap="large"
-        )
-
-        # 原图
-        with original_col:
-
-            st.markdown("#### 原始图像")
-
-            st.image(
-                image,
-                use_container_width=True
-            )
-
-        # YOLO 输出
+        # YOLO绘制结果
         annotated_bgr = result.plot()
 
         annotated_rgb = cv2.cvtColor(
@@ -359,26 +322,16 @@ if detect_button:
             cv2.COLOR_BGR2RGB
         )
 
-        with result_col:
 
-            st.markdown("#### AI 检测结果")
-
-            st.image(
-                annotated_rgb,
-                use_container_width=True
-            )
-
-
-        # =================================================
-        # 数据统计
-        # =================================================
         boxes = result.boxes
 
         object_count = len(boxes)
 
+
+        # 统计置信度
         if object_count > 0:
 
-            conf_array = (
+            conf_values = (
                 boxes.conf
                 .detach()
                 .cpu()
@@ -386,11 +339,11 @@ if detect_button:
             )
 
             max_conf = float(
-                np.max(conf_array)
+                np.max(conf_values)
             )
 
             avg_conf = float(
-                np.mean(conf_array)
+                np.mean(conf_values)
             )
 
         else:
@@ -399,83 +352,269 @@ if detect_button:
             avg_conf = 0.0
 
 
-        st.markdown("### 检测数据")
+        st.session_state.result_data = {
+            "image": image,
+            "annotated_rgb": annotated_rgb,
+            "annotated_bgr": annotated_bgr,
+            "object_count": object_count,
+            "max_conf": max_conf,
+            "avg_conf": avg_conf,
+            "confidence": confidence,
+            "inference_time": inference_time
+        }
 
-        metric1, metric2, metric3, metric4 = st.columns(4)
 
-        metric1.metric(
-            "检测目标",
-            f"{object_count} 个"
-        )
+# =========================================================
+# 右侧：检测工作区
+# =========================================================
+with workspace_col:
 
-        metric2.metric(
-            "最高置信度",
-            (
-                f"{max_conf * 100:.1f}%"
-                if object_count > 0
-                else "—"
+    st.markdown("### 🔍 检测工作区")
+
+    st.caption(
+        "原始图像与 YOLOv8 分析结果将同时显示在这里。"
+    )
+
+
+    # -----------------------------------------------------
+    # 尚未检测
+    # -----------------------------------------------------
+    if st.session_state.result_data is None:
+
+        with st.container(border=True):
+
+            st.markdown("")
+
+            st.markdown(
+                """
+                <div style="
+                    text-align:center;
+                    padding:95px 20px;
+                ">
+
+                    <div style="
+                        font-size:54px;
+                        margin-bottom:16px;
+                    ">
+                        🔥
+                    </div>
+
+                    <div style="
+                        font-size:21px;
+                        font-weight:700;
+                        color:#273142;
+                    ">
+                        等待检测
+                    </div>
+
+                    <div style="
+                        color:#8a94a6;
+                        font-size:14px;
+                        margin-top:8px;
+                    ">
+                        请在左侧上传图片并点击「开始检测」
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
-        )
 
-        metric3.metric(
-            "平均置信度",
-            (
-                f"{avg_conf * 100:.1f}%"
-                if object_count > 0
-                else "—"
-            )
-        )
 
-        metric4.metric(
-            "检测阈值",
-            f"{confidence * 100:.0f}%"
-        )
+    # -----------------------------------------------------
+    # 已经完成检测
+    # -----------------------------------------------------
+    else:
+
+        data = st.session_state.result_data
 
 
         # =================================================
-        # 状态判断
+        # 图片左右双视图
         # =================================================
-        st.markdown("### 检测状态")
+        original_col, detection_col = st.columns(
+            2,
+            gap="large"
+        )
 
-        if object_count == 0:
 
-            st.success(
-                "✅ 当前图像中未检测到符合阈值的火灾目标。"
-            )
+        # -------------------------------------------------
+        # 原始图像
+        # -------------------------------------------------
+        with original_col:
 
-        else:
+            with st.container(border=True):
 
-            if max_conf >= 0.60:
+                st.markdown("#### 🖼️ 原始图像")
 
-                st.error(
-                    "🔥 检测到较高置信度的火灾目标。"
+                st.image(
+                    data["image"],
+                    use_container_width=True
                 )
 
-            elif max_conf >= 0.30:
+                st.markdown(
+                    """
+                    **图像含义**
 
-                st.warning(
-                    "⚠️ 检测到疑似火灾目标，请结合实际场景进一步确认。"
+                    此区域显示用户上传的原始图像，
+                    未经过目标检测算法处理。
+
+                    可用于与右侧 AI 检测结果进行直接对比。
+                    """
+                )
+
+
+        # -------------------------------------------------
+        # 检测结果
+        # -------------------------------------------------
+        with detection_col:
+
+            with st.container(border=True):
+
+                st.markdown("#### 🔥 AI 检测结果")
+
+                st.image(
+                    data["annotated_rgb"],
+                    use_container_width=True
+                )
+
+                st.markdown(
+                    """
+                    **结果含义**
+
+                    蓝色检测框表示 YOLOv8 认为可能存在
+                    **火焰目标的位置**。
+
+                    检测框上方的数字表示该目标的
+                    **模型置信度**。
+                    """
+                )
+
+
+        # =================================================
+        # 图例说明
+        # =================================================
+        with st.container(border=True):
+
+            st.markdown("### 📖 检测结果说明")
+
+            meaning1, meaning2, meaning3 = st.columns(3)
+
+            with meaning1:
+
+                st.markdown("#### ▣ 检测框")
+
+                st.write(
+                    "方框表示模型定位到的疑似火焰区域。"
+                )
+
+            with meaning2:
+
+                st.markdown("#### % 置信度")
+
+                st.write(
+                    "表示模型对该目标属于火焰类别的判断程度。"
+                )
+
+            with meaning3:
+
+                st.markdown("#### 🎚 检测阈值")
+
+                st.write(
+                    "低于当前设置阈值的候选目标不会显示。"
+                )
+
+
+        # =================================================
+        # 检测统计
+        # =================================================
+        st.markdown("### 📊 检测数据")
+
+        m1, m2, m3, m4 = st.columns(4)
+
+        m1.metric(
+            "检测目标",
+            f'{data["object_count"]} 个'
+        )
+
+        m2.metric(
+            "最高置信度",
+            (
+                f'{data["max_conf"] * 100:.1f}%'
+                if data["object_count"] > 0
+                else "—"
+            )
+        )
+
+        m3.metric(
+            "平均置信度",
+            (
+                f'{data["avg_conf"] * 100:.1f}%'
+                if data["object_count"] > 0
+                else "—"
+            )
+        )
+
+        m4.metric(
+            "检测阈值",
+            f'{data["confidence"] * 100:.0f}%'
+        )
+
+
+        # =================================================
+        # 检测判断
+        # =================================================
+        with st.container(border=True):
+
+            st.markdown("### 🚨 AI 分析状态")
+
+            if data["object_count"] == 0:
+
+                st.success(
+                    "当前图像中未检测到达到设定阈值的火焰目标。"
                 )
 
             else:
 
-                st.info(
-                    "ℹ️ 检测到低置信度疑似目标。"
-                )
+                if data["max_conf"] >= 0.60:
+
+                    st.error(
+                        "检测到较高置信度的火焰目标，"
+                        "建议进一步核查现场情况。"
+                    )
+
+                elif data["max_conf"] >= 0.30:
+
+                    st.warning(
+                        "检测到疑似火焰目标，"
+                        "建议结合实际场景进行判断。"
+                    )
+
+                else:
+
+                    st.info(
+                        "检测到低置信度疑似火焰目标。"
+                    )
+
+
+            st.caption(
+                f'本次模型处理耗时约 '
+                f'{data["inference_time"]:.2f} 秒。'
+            )
 
 
         # =================================================
-        # 下载结果
+        # 下载
         # =================================================
         success, encoded_image = cv2.imencode(
             ".png",
-            annotated_bgr
+            data["annotated_bgr"]
         )
 
         if success:
 
             st.download_button(
-                "⬇️ 下载检测结果",
+                "⬇️ 下载检测结果图片",
                 data=encoded_image.tobytes(),
                 file_name="fire_detection_result.png",
                 mime="image/png",
@@ -484,20 +623,10 @@ if detect_button:
 
 
 # =========================================================
-# 页脚
+# footer
 # =========================================================
 st.markdown("---")
 
-st.markdown(
-    """
-    <div style="
-        text-align:center;
-        color:#94a3b8;
-        font-size:13px;
-        padding:6px 0 14px 0;
-    ">
-        Fire Supervision · YOLOv8 Intelligent Detection
-    </div>
-    """,
-    unsafe_allow_html=True
+st.caption(
+    "Fire Supervision · YOLOv8 Intelligent Fire Detection System"
 )
